@@ -31,7 +31,7 @@ from datetime import datetime
 
 import sys
 sys.path.append('/home/mcherti/work/code/feature_generation')
-from jobs.hp import get_scores_bandit, get_hypers
+from jobs.hp import get_scores_bandit, get_hypers, History
 
 def load_data():
     from datakit.mnist import load
@@ -263,10 +263,13 @@ def run(hp, folder):
 def insert(nb=1):
     from lightjob.cli import load_db
     from lightjob.utils import summarize
+    from datetime import datetime
     db = load_db()
     nb_samples = 100
     target = 'stats.out_of_the_box_classification.fonts.objectness'
     inputs, outputs = get_hypers(state='success', y_col=target)
+    new_inserted_inputs = []
+    new_jobs = []
     for _ in range(nb):
         new_inputs = [sample() for _ in range(nb_samples)]
         scores = get_scores_bandit(inputs, outputs, new_inputs=new_inputs, algo='ucb')
@@ -277,6 +280,15 @@ def insert(nb=1):
             existing = '(new)'
         print('expected {} for the selected job : {}, id:{}{}'.format(target, np.max(scores), summarize(new_input), existing))
         db.safe_add_job(new_input)
+        new_jobs.append(summarize(new_input))
+
+    history = History()
+    filename = 'jobs/hp_history.pkl'
+    if os.path.exists(filename):
+        history.load(filename)
+    history.push({'jobs': new_jobs, 'time': str(datetime.now())}, target)
+    history.save(filename)
+
 
 def run_job(s):
     from lightjob.cli import load_db

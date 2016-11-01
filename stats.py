@@ -46,8 +46,8 @@ def parzen(j):
     return {'ll_parzen_mean': float(ll.mean()), 'll_parzen_std': float(ll.std() / (100.)) }
 
 def out_of_the_box(j):
-    if has(j, 'out_of_the_box_classification'):
-        return {}
+    #if has(j, 'out_of_the_box_classification'):
+    #    return {}
     folder = os.path.join('jobs', j['summary'])
     try:
         os.link(folder + '/gen.npz', folder + '/images.npz')
