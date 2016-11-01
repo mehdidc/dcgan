@@ -1,3 +1,5 @@
 from job import insert
+import sys
 if __name__ == '__main__':
-    insert(1)
+    c = int(sys.argv[1])
+    insert(c)

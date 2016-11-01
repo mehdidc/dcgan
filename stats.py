@@ -6,8 +6,8 @@ from likelihood_estimation_parzen import ll_parzen
 import numpy as np
 import sys
 sys.path.append('/home/mcherti/work/code/feature_generation')
-from tools.compute.genstats import compute_out_of_the_box_classification
-
+from tools.compute.genstats import compute_out_of_the_box_classification, out_of_the_box_names, out_of_the_box_models
+import pprint
 data = mnist.load(which='test')
 mnist_test_X = data['test']['X'] / 255.
 mnist_test_X = mnist_test_X.astype(np.float32)
@@ -20,11 +20,13 @@ def compute_stats(j):
     st = {}
     stat_funcs = [parzen, out_of_the_box]
     stats = j.get('stats', {})
+    if not stats:
+        stats = {}
     for func in stat_funcs:
         st = func(j)
         stats.update(st)
     print('Finished {}'.format(j['summary']))
-    print(stats)
+    pprint.pprint(stats, indent=2)
     return stats
 
 def has(j, stat):
@@ -51,18 +53,8 @@ def out_of_the_box(j):
         os.link(folder + '/gen.npz', folder + '/images.npz')
     except OSError:
         pass
-    names = [
-        'mnist_classifier', 
-        '5_vs_fake_jobset75',
-        'm2', # another mnist classifier (the one wich worked better for jobset75)
-        'fonts',
-    ]
-    models = [
-        'tools/models/external/mnist_classifier', 
-        'tools/models/external/5_vs_fake_jobset75',
-        'tools/models/mnist/m2',
-        'tools/models/external/fonts'
-    ]
+    names = out_of_the_box_names
+    models = out_of_the_box_models
     models = ['../../../feature_generation/' + m for m in models]
     stat = {}
     for model_name, model_folder in zip(names, models):

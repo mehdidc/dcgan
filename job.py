@@ -29,6 +29,10 @@ import numpy as np
 
 from datetime import datetime
 
+import sys
+sys.path.append('/home/mcherti/work/code/feature_generation')
+from jobs.hp import get_scores_bandit, get_hypers
+
 def load_data():
     from datakit.mnist import load
     data = load(which='train')
@@ -58,7 +62,6 @@ def sample():
         scale = R.choice(np.logspace(-3, -1, 100)),
         budget_hours=2
     )
-    print(hp)
     return hp
 
 def run(hp, folder):
@@ -259,10 +262,21 @@ def run(hp, folder):
 
 def insert(nb=1):
     from lightjob.cli import load_db
+    from lightjob.utils import summarize
     db = load_db()
+    nb_samples = 100
+    target = 'stats.out_of_the_box_classification.fonts.objectness'
+    inputs, outputs = get_hypers(state='success', y_col=target)
     for _ in range(nb):
-        hp = sample()
-        db.safe_add_job(hp)
+        new_inputs = [sample() for _ in range(nb_samples)]
+        scores = get_scores_bandit(inputs, outputs, new_inputs=new_inputs, algo='ucb')
+        new_input = new_inputs[np.argmax(scores)]
+        if db.job_exists_by_summary(summarize(new_input)):
+            existing = '(exists)'
+        else:
+            existing = '(new)'
+        print('expected {} for the selected job : {}, id:{}{}'.format(target, np.max(scores), summarize(new_input), existing))
+        db.safe_add_job(new_input)
 
 def run_job(s):
     from lightjob.cli import load_db
