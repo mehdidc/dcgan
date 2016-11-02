@@ -268,6 +268,10 @@ def insert(nb=1):
     nb_samples = 100
     target = 'stats.out_of_the_box_classification.fonts.objectness'
     inputs, outputs = get_hypers(state='success', y_col=target)
+    isnt_nan = map(lambda o:not np.isnan(o), outputs)
+    inputs = [inputs[i] for i in range(len(inputs)) if isnt_nan[i]]
+    outputs = [outputs[i] for i in range(len(outputs)) if isnt_nan[i]]
+
     new_inserted_inputs = []
     new_jobs = []
     for _ in range(nb):

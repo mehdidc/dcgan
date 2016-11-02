@@ -26,7 +26,7 @@ def compute_stats(j):
         st = func(j)
         stats.update(st)
     print('Finished {}'.format(j['summary']))
-    pprint.pprint(stats, indent=2)
+    #pprint.pprint(stats, indent=2)
     return stats
 
 def has(j, stat):
