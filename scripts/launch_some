@@ -1,0 +1,2 @@
+#!/bin/sh
+for v in $(lightjob show --state=available|head -n 20);do sbatch --output=stdout/$v --error=stdout/$v scripts/run_job $v;done
