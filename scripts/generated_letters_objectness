@@ -1,8 +1,0 @@
-#!/bin/sh
-V="
-objectness
-sample_objectness
-objectness_renyi
-sample_objectness_renyi
-"
-for v in $V;do python scripts/obox.py --field="stats.out_of_the_box_classification.fonts.$v" --model-folder=tools/models/external/fonts --name="letters#$v"; done

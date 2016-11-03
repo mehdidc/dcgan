@@ -1,3 +1,0 @@
-#!/bin/sh
-F="stats.ll_parzen_mean"
-lightjob show --fields="summary,$F" --sort=$F --state=success --details --descending

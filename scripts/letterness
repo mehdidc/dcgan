@@ -1,3 +1,0 @@
-#!/bin/sh
-F="stats.out_of_the_box_classification.letterness.count_letters_99"
-lightjob show --fields="summary,summary,$F" --sort=$F --state=success  --details --descending

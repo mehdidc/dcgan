@@ -1,4 +1,0 @@
-#!/bin/sh
-F1="stats.out_of_the_box_classification.m2.objectness"
-F2="stats.out_of_the_box_classification.m2.objectness_correction"
-lightjob show --fields="summary,$F1,$F2" --sort=$F2 --state=success --details --descending
