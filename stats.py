@@ -50,8 +50,8 @@ def parzen_letters(j):
     return {'parzen_letters': compute_parzen_letters(folder, nb_samples=10000, batch_size=10)}
 
 def out_of_the_box(j):
-    if has(j, 'out_of_the_box_classification'):
-        return {}
+    #if has(j, 'out_of_the_box_classification'):
+    #    return {}
     folder = os.path.join('jobs', j['summary'])
     link(folder)
     names = out_of_the_box_names
